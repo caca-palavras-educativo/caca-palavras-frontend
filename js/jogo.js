@@ -270,13 +270,8 @@ class JogoEducativo {
                 celula.dataset.row = i;
                 celula.dataset.col = j;
                 
-                // Event listeners para seleção
-                celula.addEventListener('mousedown', (e) => this.iniciarSelecao(e, i, j));
-                celula.addEventListener('mouseover', (e) => this.continuarSelecao(e, i, j));
-                celula.addEventListener('mouseup', () => this.finalizarSelecao());
-                celula.addEventListener('touchstart', (e) => this.iniciarSelecao(e, i, j));
-                celula.addEventListener('touchmove', (e) => this.handleTouchMove(e));
-                celula.addEventListener('touchend', () => this.finalizarSelecao());
+                // Event listener para clique individual (touch e mouse)
+                celula.addEventListener('click', (e) => this.selecionarCelula(e, i, j));
                 
                 linha.appendChild(celula);
             }
@@ -287,96 +282,131 @@ class JogoEducativo {
         container.appendChild(tabela);
     }
     
-    // Iniciar seleção
-    iniciarSelecao(e, row, col) {
+    // Selecionar célula individual
+    selecionarCelula(e, row, col) {
         e.preventDefault();
-        this.selecionadas = [];
-        this.adicionarAoSelecao(row, col);
-    }
-    
-    // Continuar seleção
-    continuarSelecao(e, row, col) {
-        if (e.buttons === 1) { // Mouse pressionado
-            this.adicionarAoSelecao(row, col);
-        }
-    }
-    
-    // Handle para touch move
-    handleTouchMove(e) {
-        e.preventDefault();
-        const touch = e.touches[0];
-        const elemento = document.elementFromPoint(touch.clientX, touch.clientY);
         
-        if (elemento && elemento.classList.contains('celula-grade')) {
-            const r = parseInt(elemento.dataset.row);
-            const c = parseInt(elemento.dataset.col);
-            this.adicionarAoSelecao(r, c);
-        }
-    }
-    
-    // Adicionar célula à seleção
-    adicionarAoSelecao(row, col) {
-        // Evitar duplicatas e saltos muito grandes
-        if (this.selecionadas.length > 0) {
-            const ultima = this.selecionadas[this.selecionadas.length - 1];
-            const distancia = Math.max(Math.abs(row - ultima.row), Math.abs(col - ultima.col));
-            
-            // Permitir células adjacentes ou diagonais
-            if (distancia > 1) return;
-            
-            // Evitar duplicatas
-            if (this.selecionadas.some(s => s.row === row && s.col === col)) return;
+        // Se é a primeira seleção
+        if (this.selecionadas.length === 0) {
+            this.selecionadas.push({ row, col });
+            this.atualizarDisplaySelecao();
+            return;
         }
         
+        // Verificar se é uma célula já selecionada (desfazer)
+        const jaExisteSelecionada = this.selecionadas.findIndex(s => s.row === row && s.col === col);
+        if (jaExisteSelecionada !== -1) {
+            // Remover e reconstruir até esse ponto (desfazer últimos cliques)
+            this.selecionadas = this.selecionadas.slice(0, jaExisteSelecionada);
+            this.atualizarDisplaySelecao();
+            return;
+        }
+        
+        // Verificar se é adjacente à última seleção
+        const ultima = this.selecionadas[this.selecionadas.length - 1];
+        const distancia = Math.max(Math.abs(row - ultima.row), Math.abs(col - ultima.col));
+        
+        // Permitir apenas células adjacentes (linha, coluna ou diagonal)
+        if (distancia !== 1) {
+            return;
+        }
+        
+        // Adicionar à seleção
         this.selecionadas.push({ row, col });
-        this.destacarSelecionadas();
+        this.atualizarDisplaySelecao();
     }
     
-    // Destacar células selecionadas
-    destacarSelecionadas() {
+    // Atualizar display da seleção
+    atualizarDisplaySelecao() {
+        // Limpar destaques anteriores
         document.querySelectorAll('.celula-grade').forEach(celula => {
             celula.classList.remove('selecionada');
         });
         
+        // Destacar células selecionadas
         this.selecionadas.forEach(pos => {
             const celula = document.querySelector(
                 `[data-row="${pos.row}"][data-col="${pos.col}"]`
             );
             if (celula) celula.classList.add('selecionada');
         });
+        
+        // Atualizar display da palavra
+        const texto = this.selecionadas
+            .map(pos => this.grade.grade[pos.row][pos.col].letra)
+            .join('');
+        
+        document.getElementById('palavraSelecionada').textContent = texto || '---';
     }
     
-    // Finalizar seleção
-    finalizarSelecao() {
-        if (this.selecionadas.length === 0) return;
+    // Confirmar palavra (validar e pontuar)
+    confirmarPalavra() {
+        if (this.selecionadas.length === 0) {
+            this.exibirMensagem('Selecione uma palavra primeiro!', 'erro');
+            return;
+        }
         
         // Obter texto selecionado
         const textoSelecionado = this.selecionadas
             .map(pos => this.grade.grade[pos.row][pos.col].letra)
             .join('');
         
-        // Verificar se formou uma palavra
-        this.verificarPalavra(textoSelecionado);
-        
-        // Limpar seleção após breve delay
-        setTimeout(() => {
-            this.selecionadas = [];
-            this.destacarSelecionadas();
-        }, 200);
-    }
-    
-    // Verificar se a seleção formou uma palavra
-    verificarPalavra(texto) {
+        // Procurar palavra na lista
+        let encontrou = false;
         for (let i = 0; i < this.palavras.length; i++) {
             if (this.palavrasEncontradas.has(i)) continue;
             
             const palavra = this.palavras[i].termo.toUpperCase();
             
             // Verificar se o texto corresponde a palavra ou ao contrário
-            if (texto === palavra || texto === palavra.split('').reverse().join('')) {
+            if (textoSelecionado === palavra || textoSelecionado === palavra.split('').reverse().join('')) {
                 this.palavraEncontrada(i);
+                encontrou = true;
+                break;
             }
         }
+        
+        if (!encontrou) {
+            this.exibirMensagem('Palavra inválida!', 'erro');
+        }
+        
+        // Limpar seleção após validação
+        this.limparSelecao();
+    }
+    
+    // Limpar seleção
+    limparSelecao() {
+        this.selecionadas = [];
+        this.atualizarDisplaySelecao();
+        document.getElementById('palavraSelecionada').textContent = '---';
+        // Remover mensagens
+        const msg = document.querySelector('.mensagem-validacao');
+        if (msg) msg.remove();
+    }
+    
+    // Exibir mensagem de validação
+    exibirMensagem(texto, tipo) {
+        // Remover mensagem anterior se existir
+        const msgAnterior = document.querySelector('.mensagem-validacao');
+        if (msgAnterior) msgAnterior.remove();
+        
+        // Criar nova mensagem
+        const msg = document.createElement('div');
+        msg.className = `mensagem-validacao ${tipo}`;
+        msg.textContent = texto;
+        
+        // Inserir após os controles
+        const controles = document.querySelector('.controles-selecao');
+        if (controles) {
+            controles.parentNode.insertBefore(msg, controles.nextSibling);
+        }
+        
+        // Remover após 3 segundos
+        setTimeout(() => {
+            if (msg && msg.parentNode) {
+                msg.remove();
+            }
+        }, 3000);
     }
     
     // Palavra foi encontrada
@@ -395,6 +425,9 @@ class JogoEducativo {
         
         // Destacar palavras na grade
         this.destacarPalavrasNaGrade();
+        
+        // Exibir mensagem de sucesso
+        this.exibirMensagem('✓ Palavra encontrada!', 'sucesso');
         
         // Verificar se todas foram encontradas
         if (this.palavrasEncontradas.size === this.palavras.length) {
@@ -549,6 +582,16 @@ class JogoEducativo {
             if (confirm('Deseja sair do jogo? Seu progresso será perdido.')) {
                 window.location.href = '../index.html';
             }
+        });
+        
+        // Botão confirmar palavra
+        document.getElementById('botaoConfirmar').addEventListener('click', () => {
+            this.confirmarPalavra();
+        });
+        
+        // Botão limpar seleção
+        document.getElementById('botaoLimpar').addEventListener('click', () => {
+            this.limparSelecao();
         });
     }
     
