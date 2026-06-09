@@ -1,0 +1,64 @@
+/* ===================================
+   CSS ESPECÍFICO - TELA INICIAL
+   =================================== */
+
+/* Estilos adicionais específicos para home.html */
+
+/* Garantir que o formulário se comporta bem em diferentes tamanhos */
+.formulario {
+    width: 100%;
+}
+
+.grupo-form {
+    width: 100%;
+}
+
+/* Select em foco */
+.select:focus-visible {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    border-color: #667eea;
+}
+
+/* Efeito ao passar o mouse sobre o select */
+.select option {
+    background: white;
+    color: #333;
+}
+
+/* Botão em estado ativo */
+.botao-principal:active {
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+/* Responsividade para dispositivos muito pequenos (320px) */
+@media (max-width: 360px) {
+    body {
+        padding: 15px;
+    }
+
+    .titulo {
+        font-size: 28px;
+    }
+
+    .descricao {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    .cartao {
+        padding: 25px 15px;
+        border-radius: 12px;
+    }
+
+    .select,
+    .botao {
+        font-size: 15px;
+        padding: 12px 10px;
+        min-height: 48px;
+    }
+
+    .label {
+        font-size: 13px;
+    }
+}

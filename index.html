@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caça-Palavras Educativo</title>
+    
+    <!-- CSS Global -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- CSS da Tela Inicial -->
+    <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+    <!-- Tela Inicial -->
+    <main class="container-principal">
+        <!-- Cabeçalho -->
+        <header class="cabecalho">
+            <h1 class="titulo">Caça-Palavras Educativo</h1>
+        </header>
+
+        <!-- Conteúdo Principal -->
+        <section class="cartao">
+            <!-- Descrição -->
+            <p class="descricao">
+                Aprenda conceitos importantes sobre respeito, igualdade e diversidade enquanto se diverte.
+            </p>
+
+            <!-- Formulário de Seleção -->
+            <form class="formulario" id="formularioJogo">
+                
+                <!-- Seletor de Tema -->
+                <div class="grupo-form">
+                    <label for="selectTema" class="label">Escolha um Tema:</label>
+                    <select id="selectTema" class="select" required>
+                        <option value="">Selecione um tema...</option>
+                    </select>
+                </div>
+
+                <!-- Seletor de Dificuldade -->
+                <div class="grupo-form">
+                    <label for="selectDificuldade" class="label">Escolha a Dificuldade:</label>
+                    <select id="selectDificuldade" class="select" required>
+                        <option value="">Selecione uma dificuldade...</option>
+                        <option value="facil">Fácil</option>
+                        <option value="medio">Médio</option>
+                        <option value="dificil">Difícil</option>
+                    </select>
+                </div>
+
+                <!-- Indicador de Carregamento -->
+                <div id="containerCarregamento" class="container-carregamento" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Carregando temas...</p>
+                </div>
+
+                <!-- Botão Iniciar -->
+                <button type="button" id="botaoIniciar" class="botao botao-principal">
+                    Iniciar Jogo
+                </button>
+            </form>
+        </section>
+    </main>
+
+    <!-- Script da página -->
+    <script src="js/home.js"></script>
+</body>
+</html>
