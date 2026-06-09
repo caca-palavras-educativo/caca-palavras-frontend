@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caça-Palavras - Jogo</title>
+    
+    <!-- CSS Global -->
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- CSS do Jogo -->
+    <link rel="stylesheet" href="../css/jogo.css">
+</head>
+<body>
+    <!-- Tela do Jogo -->
+    <div class="container-jogo">
+        
+        <!-- Cabeçalho do Jogo -->
+        <header class="cabecalho-jogo">
+            <div class="info-tema">
+                <h1 class="titulo-tema" id="tituloTema">Tema</h1>
+                <p class="dificuldade" id="dificuldadeJogo">Dificuldade</p>
+            </div>
+            
+            <button class="botao-voltar" id="botaoVoltar" title="Voltar para menu">
+                ← Voltar
+            </button>
+        </header>
+
+        <!-- Barra de Status -->
+        <section class="barra-status">
+            <div class="status-item">
+                <span class="label-status">Tempo</span>
+                <span class="valor-status" id="cronometro">00:00</span>
+            </div>
+            
+            <div class="status-item">
+                <span class="label-status">Pontos</span>
+                <span class="valor-status" id="pontuacao">0</span>
+            </div>
+            
+            <div class="status-item">
+                <span class="label-status">Recorde</span>
+                <span class="valor-status" id="melhorTempo">--:--</span>
+            </div>
+        </section>
+
+        <!-- Conteúdo Principal -->
+        <main class="conteudo-jogo">
+            
+            <!-- Lista de Palavras -->
+            <aside class="painel-palavras">
+                <h2 class="titulo-painel">Palavras para Encontrar</h2>
+                <ul class="lista-palavras" id="listaPalavras">
+                    <!-- Palavras serão inseridas dinamicamente -->
+                </ul>
+            </aside>
+
+            <!-- Área Central -->
+            <div class="area-central">
+                
+                <!-- Grade do Caça-Palavras -->
+                <section class="secao-grade">
+                    <div class="container-grade" id="containerGrade">
+                        <!-- Grade será gerada aqui -->
+                        <div class="placeholder-grade">
+                            <p>Grade do Caça-Palavras</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Explicação da Palavra -->
+                <section class="secao-explicacao">
+                    <h3 class="titulo-explicacao">Explicação</h3>
+                    <div class="container-explicacao" id="containerExplicacao">
+                        <p class="texto-explicacao">
+                            Selecione uma palavra para ver sua explicação
+                        </p>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Modal de Conclusão -->
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal-conclusao" id="modalConclusao">
+                <button class="botao-fechar-modal" id="botaoFecharModal">×</button>
+                
+                <h2 class="modal-titulo">Parabéns!</h2>
+                
+                <div class="modal-conteudo">
+                    <p class="modal-mensagem">Você encontrou todas as palavras!</p>
+                    
+                    <div class="modal-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Tempo Final</span>
+                            <span class="stat-valor" id="tempoFinal">00:00</span>
+                        </div>
+                        
+                        <div class="stat-item">
+                            <span class="stat-label">Pontuação</span>
+                            <span class="stat-valor" id="pontuacaoFinal">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-botoes">
+                    <button class="botao modal-botao" id="botaoNovoJogo">
+                        Novo Jogo
+                    </button>
+                    <button class="botao modal-botao botao-secundario" id="botaoMenuPrincipal">
+                        Menu Principal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/modal.js"></script>
+    <script src="../js/jogo.js"></script>
+</body>
+</html>
