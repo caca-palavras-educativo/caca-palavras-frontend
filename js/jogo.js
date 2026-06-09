@@ -6,100 +6,100 @@ class Grade {
     constructor(tamanho) {
         this.tamanho = tamanho;
         this.grade = this.inicializarGrade();
-        this.palavrasGrade = [];
+        this.palavrasGrade = []; // Array com dados de cada palavra inserida
     }
     
-    // Inicializar grade vazia
+    // Inicializar grade vazia com células limpas
     inicializarGrade() {
         return Array(this.tamanho).fill(null).map(() => 
             Array(this.tamanho).fill(null).map(() => ({
                 letra: '',
-                palavraIds: []
+                palavraIds: [] // IDs das palavras que usam esta célula
             }))
         );
     }
     
-    // Inserir palavra na grade
-    inserirPalavra(palavra, id, direcao) {
-        // Direcoes: 0=horizontal, 1=vertical, 2=diagonal(descente), 3=diagonal(subida)
-        
-        let posicoes = [];
-        
-        // Tentar inserir com retry
-        for (let tentativa = 0; tentativa < 100; tentativa++) {
-            const row = Math.floor(Math.random() * this.tamanho);
-            const col = Math.floor(Math.random() * this.tamanho);
-            
-            // Verificar se é possível inserir
-            if (this.podeInserir(palavra, row, col, direcao)) {
-                posicoes = this.inserirNaGrade(palavra, id, row, col, direcao);
-                break;
-            }
-        }
-        
-        return posicoes;
+    // Resetar grade mantendo o tamanho
+    resetar() {
+        this.grade = this.inicializarGrade();
+        this.palavrasGrade = [];
     }
     
-    // Verificar se é possível inserir palavra
+    // Inserir palavra em posição específica com direção específica
+    // Retorna posições da palavra ou null se não conseguiu inserir
+    inserirPalavraEm(palavra, id, row, col, direcao) {
+        // Validar se pode inserir nesta posição
+        if (!this.podeInserir(palavra, row, col, direcao)) {
+            return null;
+        }
+        
+        // Inserir e retornar posições
+        return this.inserirNaGrade(palavra, id, row, col, direcao);
+    }
+    
+    // Verificar se é possível inserir palavra em posição e direção específicas
+    // Permite compartilhamento de letras se forem iguais
     podeInserir(palavra, row, col, direcao) {
-        if (direcao === 0) { // Horizontal
-            if (col + palavra.length > this.tamanho) return false;
-            for (let i = 0; i < palavra.length; i++) {
-                if (this.grade[row][col + i].letra !== '' && 
-                    this.grade[row][col + i].letra !== palavra[i]) {
-                    return false;
-                }
+        const deltas = this.obterDeltas(direcao);
+        if (!deltas) return false;
+        
+        // Validar limites da grade
+        for (let i = 0; i < palavra.length; i++) {
+            const novaLinha = row + deltas.dr * i;
+            const novaColuna = col + deltas.dc * i;
+            
+            if (novaLinha < 0 || novaLinha >= this.tamanho ||
+                novaColuna < 0 || novaColuna >= this.tamanho) {
+                return false;
             }
-        } else if (direcao === 1) { // Vertical
-            if (row + palavra.length > this.tamanho) return false;
-            for (let i = 0; i < palavra.length; i++) {
-                if (this.grade[row + i][col].letra !== '' && 
-                    this.grade[row + i][col].letra !== palavra[i]) {
-                    return false;
-                }
-            }
-        } else if (direcao === 2) { // Diagonal (descente)
-            if (row + palavra.length > this.tamanho || col + palavra.length > this.tamanho) return false;
-            for (let i = 0; i < palavra.length; i++) {
-                if (this.grade[row + i][col + i].letra !== '' && 
-                    this.grade[row + i][col + i].letra !== palavra[i]) {
-                    return false;
-                }
-            }
-        } else if (direcao === 3) { // Diagonal (subida)
-            if (row - palavra.length + 1 < 0 || col + palavra.length > this.tamanho) return false;
-            for (let i = 0; i < palavra.length; i++) {
-                if (this.grade[row - i][col + i].letra !== '' && 
-                    this.grade[row - i][col + i].letra !== palavra[i]) {
-                    return false;
-                }
+            
+            const celula = this.grade[novaLinha][novaColuna];
+            const letraEsperada = palavra[i].toUpperCase();
+            
+            // Se célula ocupada, só permite se letra for igual (compartilhamento)
+            if (celula.letra !== '' && celula.letra !== letraEsperada) {
+                return false;
             }
         }
+        
         return true;
+    }
+    
+    // Obter deslocamento (delta) para cada direção
+    obterDeltas(direcao) {
+        const deltas = {
+            0: { dr: 0, dc: 1 },  // Horizontal (direita)
+            1: { dr: 1, dc: 0 },  // Vertical (baixo)
+            2: { dr: 1, dc: 1 },  // Diagonal descente
+            3: { dr: -1, dc: 1 }  // Diagonal subida
+        };
+        return deltas[direcao] || null;
     }
     
     // Inserir palavra na grade
     inserirNaGrade(palavra, id, row, col, direcao) {
         const posicoes = [];
+        const deltas = this.obterDeltas(direcao);
         
         for (let i = 0; i < palavra.length; i++) {
-            let r = row;
-            let c = col;
+            const r = row + deltas.dr * i;
+            const c = col + deltas.dc * i;
+            const letraUppercase = palavra[i].toUpperCase();
             
-            if (direcao === 1) r += i;
-            else if (direcao === 2) { r += i; c += i; }
-            else if (direcao === 3) { r -= i; c += i; }
-            else c += i;
+            this.grade[r][c].letra = letraUppercase;
             
-            this.grade[r][c].letra = palavra[i].toUpperCase();
+            // Adicionar ID da palavra se não existir
             if (!this.grade[r][c].palavraIds.includes(id)) {
                 this.grade[r][c].palavraIds.push(id);
             }
+            
             posicoes.push({ r, c });
         }
         
+        // Registrar palavra inserida
         this.palavrasGrade.push({
             id,
+            termo: palavra,
             posicoes,
             direcao,
             encontrada: false
@@ -114,10 +114,57 @@ class Grade {
         for (let i = 0; i < this.tamanho; i++) {
             for (let j = 0; j < this.tamanho; j++) {
                 if (this.grade[i][j].letra === '') {
+                    // Usar letra aleatória sem repetição excessiva
                     this.grade[i][j].letra = letras[Math.floor(Math.random() * letras.length)];
                 }
             }
         }
+    }
+    
+    // Procurar palavra na grade (para validação)
+    // Retorna true se encontrar a palavra (direta ou inversa)
+    procurarPalavra(palavra) {
+        const palavraUpper = palavra.toUpperCase();
+        const palavraInversa = palavraUpper.split('').reverse().join('');
+        
+        // Verificar todas as direções possíveis
+        for (let row = 0; row < this.tamanho; row++) {
+            for (let col = 0; col < this.tamanho; col++) {
+                // Tentar 4 direções: horizontal, vertical, diagonal desc, diagonal subida
+                for (let direcao = 0; direcao < 4; direcao++) {
+                    if (this.encontrouPalavraEm(palavraUpper, row, col, direcao)) {
+                        return true;
+                    }
+                    if (this.encontrouPalavraEm(palavraInversa, row, col, direcao)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    // Verificar se palavra existe em posição e direção específicas
+    encontrouPalavraEm(palavra, row, col, direcao) {
+        const deltas = this.obterDeltas(direcao);
+        if (!deltas) return false;
+        
+        let textoEncontrado = '';
+        
+        for (let i = 0; i < palavra.length; i++) {
+            const r = row + deltas.dr * i;
+            const c = col + deltas.dc * i;
+            
+            // Validar limites
+            if (r < 0 || r >= this.tamanho || c < 0 || c >= this.tamanho) {
+                return false;
+            }
+            
+            textoEncontrado += this.grade[r][c].letra;
+        }
+        
+        return textoEncontrado === palavra;
     }
 }
 
@@ -229,27 +276,150 @@ class JogoEducativo {
         }
     }
     
-    // Criar grade do caça-palavras
+    // Criar grade do caça-palavras com garantia de inserção 100%
     criarGrade() {
-        // Determinar tamanho baseado na dificuldade
-        const tamanhos = {
+        // Tamanhos iniciais por dificuldade
+        const tamanhosPorDificuldade = {
             'facil': 10,
             'medio': 12,
             'dificil': 15
         };
         
-        const tamanho = tamanhos[this.dificuldade] || 10;
-        this.grade = new Grade(tamanho);
+        let tamanho = tamanhosPorDificuldade[this.dificuldade] || 10;
+        let sucesso = false;
+        let tentativasGrade = 0;
+        const maxTentativasGrade = 5; // Máximo de tentativas antes de aumentar tamanho
         
-        // Inserir palavras na grade
-        this.palavras.forEach((palavra, index) => {
-            const direcoes = [0, 1, 2, 3]; // Todas as direções
-            const direcao = direcoes[Math.floor(Math.random() * direcoes.length)];
-            this.grade.inserirPalavra(palavra.termo.toUpperCase(), index, direcao);
-        });
+        // Tentar gerar até conseguir inserir todas as palavras
+        while (!sucesso && tentativasGrade < 10) {
+            tentativasGrade++;
+            this.grade = new Grade(tamanho);
+            
+            // Embaralhar lista de palavras para variação
+            const palavrasEmbaralhadas = this.embaralharPalavras();
+            
+            let todasInseridas = true;
+            
+            // Tentar inserir cada palavra
+            for (let index = 0; index < palavrasEmbaralhadas.length; index++) {
+                const palavra = palavrasEmbaralhadas[index];
+                const indicePalavraOriginal = this.palavras.indexOf(palavra);
+                
+                // Tentar inserir com direções aleatórias
+                let inserida = false;
+                const direcoes = [0, 1, 2, 3];
+                const direcoesMisturadas = this.embaralharArray(direcoes);
+                
+                for (let d = 0; d < direcoesMisturadas.length && !inserida; d++) {
+                    const direcao = direcoesMisturadas[d];
+                    const posicao = this.encontrarPosicaoAleatoriaParaPalavra(
+                        palavra.termo.toUpperCase(), 
+                        direcao
+                    );
+                    
+                    if (posicao) {
+                        const resultado = this.grade.inserirPalavraEm(
+                            palavra.termo.toUpperCase(),
+                            indicePalavraOriginal,
+                            posicao.row,
+                            posicao.col,
+                            direcao
+                        );
+                        
+                        if (resultado) {
+                            inserida = true;
+                        }
+                    }
+                }
+                
+                // Se não conseguiu inserir, marca falha
+                if (!inserida) {
+                    todasInseridas = false;
+                    break;
+                }
+            }
+            
+            // Se todas foram inseridas, validar
+            if (todasInseridas) {
+                sucesso = this.validarGrade();
+            }
+            
+            // Se falhou, aumentar tamanho para próxima tentativa
+            if (!sucesso) {
+                tamanho += 2;
+            }
+        }
         
-        // Completar com letras aleatórias
+        if (!sucesso) {
+            throw new Error('Não foi possível gerar a grade do jogo');
+        }
+        
+        // Completar espaços vazios com letras aleatórias
         this.grade.completarComLetrasAleatorias();
+    }
+    
+    // Embaralhar array (Fisher-Yates shuffle)
+    embaralharArray(array) {
+        const copia = [...array];
+        for (let i = copia.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [copia[i], copia[j]] = [copia[j], copia[i]];
+        }
+        return copia;
+    }
+    
+    // Embaralhar palavras com variação por dificuldade
+    embaralharPalavras() {
+        const copia = [...this.palavras];
+        
+        // Variação de embaralhamento por dificuldade
+        const repeticoes = {
+            'facil': 1,
+            'medio': 3,
+            'dificil': 5
+        };
+        
+        const reps = repeticoes[this.dificuldade] || 1;
+        
+        // Aplicar embaralhamento múltiplas vezes
+        for (let rep = 0; rep < reps; rep++) {
+            for (let i = copia.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copia[i], copia[j]] = [copia[j], copia[i]];
+            }
+        }
+        
+        return copia;
+    }
+    
+    // Encontrar posição aleatória válida para inserir palavra
+    encontrarPosicaoAleatoriaParaPalavra(palavra, direcao) {
+        // Tentar até 50 posições aleatórias
+        for (let tentativa = 0; tentativa < 50; tentativa++) {
+            const row = Math.floor(Math.random() * this.grade.tamanho);
+            const col = Math.floor(Math.random() * this.grade.tamanho);
+            
+            if (this.grade.podeInserir(palavra, row, col, direcao)) {
+                return { row, col };
+            }
+        }
+        
+        return null;
+    }
+    
+    // Validar que todas as palavras existem na grade
+    validarGrade() {
+        for (let i = 0; i < this.palavras.length; i++) {
+            const palavra = this.palavras[i].termo;
+            
+            // Verificar se palavra existe na grade (direta ou inversa)
+            if (!this.grade.procurarPalavra(palavra)) {
+                console.warn(`Palavra "${palavra}" não encontrada na grade após inserção`);
+                return false;
+            }
+        }
+        
+        return true;
     }
     
     // Renderizar grade visual
@@ -339,7 +509,7 @@ class JogoEducativo {
         document.getElementById('palavraSelecionada').textContent = texto || '---';
     }
     
-    // Confirmar palavra (validar e pontuar)
+    // Confirmar palavra (validar com exatidão e pontuar)
     confirmarPalavra() {
         if (this.selecionadas.length === 0) {
             this.exibirMensagem('Selecione uma palavra primeiro!', 'erro');
@@ -351,22 +521,38 @@ class JogoEducativo {
             .map(pos => this.grade.grade[pos.row][pos.col].letra)
             .join('');
         
-        // Procurar palavra na lista
-        let encontrou = false;
+        // Validação exata: procurar palavra com comprimento e conteúdo exatos
+        let indiceEncontrado = -1;
+        let palavraEncontradaExata = false;
+        
+        // Percorrer lista de palavras
         for (let i = 0; i < this.palavras.length; i++) {
-            if (this.palavrasEncontradas.has(i)) continue;
+            // Pular se já foi encontrada (impedir duplicação de pontos)
+            if (this.palavrasEncontradas.has(i)) {
+                continue;
+            }
             
             const palavra = this.palavras[i].termo.toUpperCase();
+            const palavraInversa = palavra.split('').reverse().join('');
             
-            // Verificar se o texto corresponde a palavra ou ao contrário
-            if (textoSelecionado === palavra || textoSelecionado === palavra.split('').reverse().join('')) {
-                this.palavraEncontrada(i);
-                encontrou = true;
+            // Comparação exata: sem includes(), sem startsWith(), comparação completa
+            // Validar comprimento exato
+            if (textoSelecionado.length !== palavra.length) {
+                continue;
+            }
+            
+            // Comparar sequência completa (direta ou inversa)
+            if (textoSelecionado === palavra || textoSelecionado === palavraInversa) {
+                indiceEncontrado = i;
+                palavraEncontradaExata = true;
                 break;
             }
         }
         
-        if (!encontrou) {
+        // Processar resultado
+        if (palavraEncontradaExata && indiceEncontrado !== -1) {
+            this.palavraEncontrada(indiceEncontrado);
+        } else {
             this.exibirMensagem('Palavra inválida!', 'erro');
         }
         
