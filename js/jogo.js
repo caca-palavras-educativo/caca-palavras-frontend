@@ -185,6 +185,8 @@ class JogoEducativo {
         this.selecionadas = [];
         this.palavrasEncontradas = new Set();
         this.melhorTempoAtual = null;
+        // CORRIGIDO (Requisito 2): Adicionar controle de direção para validar linha reta
+        this.direcaoFixada = null; // Armazena a direção após 2ª seleção
         
         this.inicializar();
     }
@@ -291,7 +293,12 @@ class JogoEducativo {
         const maxTentativasGrade = 5; // Máximo de tentativas antes de aumentar tamanho
         
         // Tentar gerar até conseguir inserir todas as palavras
+        // CORRIGIDO (Requisito 4): Usar maxTentativasGrade no controle do laço
         while (!sucesso && tentativasGrade < 10) {
+            // Se atingimos maxTentativasGrade tentativas, aumentar o tamanho
+            if (tentativasGrade > 0 && tentativasGrade % maxTentativasGrade === 0) {
+                tamanho += 2;
+            }
             tentativasGrade++;
             this.grade = new Grade(tamanho);
             
@@ -459,6 +466,7 @@ class JogoEducativo {
         // Se é a primeira seleção
         if (this.selecionadas.length === 0) {
             this.selecionadas.push({ row, col });
+            this.direcaoFixada = null; // Resetar direção
             this.atualizarDisplaySelecao();
             return;
         }
@@ -468,6 +476,10 @@ class JogoEducativo {
         if (jaExisteSelecionada !== -1) {
             // Remover e reconstruir até esse ponto (desfazer últimos cliques)
             this.selecionadas = this.selecionadas.slice(0, jaExisteSelecionada);
+            // CORRIGIDO (Requisito 2-3): Se removemos até ficar com 1 ou 0 elementos, resetar direção
+            if (this.selecionadas.length <= 1) {
+                this.direcaoFixada = null;
+            }
             this.atualizarDisplaySelecao();
             return;
         }
@@ -479,6 +491,23 @@ class JogoEducativo {
         // Permitir apenas células adjacentes (linha, coluna ou diagonal)
         if (distancia !== 1) {
             return;
+        }
+        
+        // CORRIGIDO (Requisito 2): Calcular direção do movimento e validar linha reta
+        const dr = row === ultima.row ? 0 : (row > ultima.row ? 1 : -1);
+        const dc = col === ultima.col ? 0 : (col > ultima.col ? 1 : -1);
+        
+        // Validar que o movimento continua em linha reta
+        // Se ainda não fixou direção (2ª seleção), fixar agora
+        if (this.direcaoFixada === null) {
+            // CORRIGIDO (Requisito 2): Fixar direção na segunda seleção
+            this.direcaoFixada = { dr, dc };
+        } else {
+            // Verificar se a direção está mantendo a mesma (impedir zig-zag)
+            if (this.direcaoFixada.dr !== dr || this.direcaoFixada.dc !== dc) {
+                // Movimento em direção diferente - não permitir zig-zag
+                return;
+            }
         }
         
         // Adicionar à seleção
@@ -563,6 +592,8 @@ class JogoEducativo {
     // Limpar seleção
     limparSelecao() {
         this.selecionadas = [];
+        // CORRIGIDO (Requisito 2-3): Resetar direção ao limpar seleção
+        this.direcaoFixada = null;
         this.atualizarDisplaySelecao();
         document.getElementById('palavraSelecionada').textContent = '---';
         // Remover mensagens
@@ -627,8 +658,13 @@ class JogoEducativo {
             celula.classList.remove('encontrada');
         });
         
+        // CORRIGIDO (Requisito 1): Usar ID da palavra em vez de índice para destacar
+        // Isso garante que a palavra correta seja destacada independentemente da ordem
+        // de inserção na grade (palavrasGrade é preenchido na ordem de inserção,
+        // mas o índice em palavrasEncontradas corresponde à posição em this.palavras)
         this.palavrasEncontradas.forEach(indice => {
-            const palavra = this.grade.palavrasGrade[indice];
+            // Procurar a palavra em palavrasGrade usando o ID (que é o índice original)
+            const palavra = this.grade.palavrasGrade.find(p => p.id === indice);
             if (palavra) {
                 palavra.posicoes.forEach(pos => {
                     const celula = document.querySelector(
@@ -796,9 +832,18 @@ class JogoEducativo {
         // Salvar recorde
         await this.salvarRecorde();
         
-        // Exibir modal
+        // Exibir modal ou fallback para alert
         const tempo = document.getElementById('cronometro').textContent;
-        modal.abrir(tempo, this.pontuacao);
+        
+        // CORRIGIDO (Requisito 6): Verificar se objeto modal existe antes de usar
+        // Evita ReferenceError: modal is not defined
+        if (typeof modal !== 'undefined' && modal && typeof modal.abrir === 'function') {
+            modal.abrir(tempo, this.pontuacao);
+        } else {
+            // Fallback para alert se modal não estiver disponível
+            const mensagem = `🎉 Parabéns! Você completou o jogo!\n\nTempo: ${tempo}\nPontuação: ${this.pontuacao}`;
+            alert(mensagem);
+        }
     }
 }
 
