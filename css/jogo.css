@@ -8,19 +8,23 @@
     flex-direction: column;
     min-height: 100vh;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding-bottom: 20px;
+    padding: 8px;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 /* Cabeçalho do Jogo */
 .cabecalho-jogo {
     background: rgba(255, 255, 255, 0.95);
-    padding: 16px;
+    padding: 12px;
     border-radius: 0 0 12px 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    margin-bottom: 16px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .info-tema {
@@ -28,31 +32,31 @@
 }
 
 .titulo-tema {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 700;
     color: #333;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
 }
 
 .dificuldade {
-    font-size: 12px;
+    font-size: 10px;
     color: #999;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
 }
 
 .botao-voltar {
-    padding: 8px 16px;
+    padding: 6px 12px;
     background: #f0f0f0;
     border: none;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     color: #666;
     cursor: pointer;
     transition: all 0.3s ease;
     white-space: nowrap;
-    margin-left: 12px;
+    margin-left: 0;
 }
 
 .botao-voltar:hover {
@@ -68,11 +72,11 @@
 .barra-status {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    padding: 16px;
+    gap: 8px;
+    padding: 12px;
     background: rgba(255, 255, 255, 0.95);
     border-radius: 12px;
-    margin: 0 16px 16px;
+    margin: 0 8px 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
@@ -84,16 +88,16 @@
 }
 
 .label-status {
-    font-size: 11px;
+    font-size: 9px;
     color: #999;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
+    letter-spacing: 0.3px;
+    margin-bottom: 2px;
     font-weight: 600;
 }
 
 .valor-status {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 700;
     color: #667eea;
     font-family: 'Courier New', monospace;
@@ -104,46 +108,50 @@
     flex: 1;
     display: grid;
     grid-template-columns: 1fr;
-    gap: 16px;
-    padding: 0 16px;
+    gap: 8px;
+    padding: 0 8px;
     overflow-y: auto;
+    min-height: 0;
 }
 
 /* Painel de Palavras */
 .painel-palavras {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 12px;
-    padding: 16px;
+    padding: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-height: 120px;
+    overflow-y: auto;
 }
 
 .titulo-painel {
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 600;
     color: #333;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
 }
 
 .lista-palavras {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
 }
 
 .item-palavra {
     background: #f0f0f0;
     border: 2px solid transparent;
     border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 14px;
+    padding: 6px 10px;
+    font-size: 12px;
     font-weight: 500;
     color: #333;
     cursor: pointer;
     transition: all 0.3s ease;
     text-transform: capitalize;
+    white-space: nowrap;
 }
 
 .item-palavra:hover {
@@ -175,20 +183,19 @@
 .secao-grade {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 12px;
-    padding: 16px;
+    padding: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .container-grade {
-    aspect-ratio: 1 / 1;
     display: flex;
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, #f5f5f5 0%, #efefef 100%);
     border-radius: 8px;
-    min-height: 250px;
-    overflow: auto;
+    overflow: visible;
     user-select: none;
+    padding: 8px;
 }
 
 .placeholder-grade {
@@ -203,10 +210,11 @@
 
 /* Grade do Caça-Palavras */
 .grade-tabela {
-    width: 100%;
-    height: 100%;
     border-collapse: collapse;
     table-layout: fixed;
+    max-width: 100%;
+    width: auto;
+    height: auto;
 }
 
 .celula-grade {
@@ -214,7 +222,6 @@
     text-align: center;
     vertical-align: middle;
     font-weight: 700;
-    font-size: 16px;
     color: #333;
     background: white;
     cursor: pointer;
@@ -223,6 +230,7 @@
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    aspect-ratio: 1 / 1;
 }
 
 .celula-grade:hover {
@@ -247,27 +255,75 @@
 }
 
 /* Responsividade para tamanho das células */
-@media (max-width: 480px) {
+@media (max-width: 360px) {
+    .container-grade {
+        padding: 4px;
+    }
+    
     .celula-grade {
-        padding: 12px 0;
+        font-size: 12px;
+        width: 32px;
+        min-width: 32px;
+    }
+}
+
+@media (min-width: 361px) and (max-width: 480px) {
+    .container-grade {
+        padding: 6px;
+    }
+    
+    .celula-grade {
+        font-size: 13px;
+        width: 38px;
+        min-width: 38px;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 600px) {
+    .container-grade {
+        padding: 8px;
+    }
+    
+    .celula-grade {
         font-size: 14px;
-        aspect-ratio: 1 / 1;
+        width: 44px;
+        min-width: 44px;
     }
 }
 
-@media (min-width: 480px) and (max-width: 768px) {
+@media (min-width: 601px) and (max-width: 768px) {
+    .container-grade {
+        padding: 10px;
+    }
+    
     .celula-grade {
-        padding: 14px 0;
         font-size: 15px;
-        aspect-ratio: 1 / 1;
+        width: 50px;
+        min-width: 50px;
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container-grade {
+        padding: 12px;
+    }
+    
     .celula-grade {
-        padding: 16px 0;
         font-size: 16px;
-        aspect-ratio: 1 / 1;
+        width: 56px;
+        min-width: 56px;
+    }
+}
+
+@media (min-width: 1025px) {
+    .container-grade {
+        padding: 16px;
+    }
+    
+    .celula-grade {
+        font-size: 18px;
+        width: 64px;
+        min-width: 64px;
     }
 }
 
@@ -276,37 +332,38 @@
    =================================== */
 
 .controles-selecao {
-    margin-top: 16px;
-    padding: 16px;
+    margin-top: 8px;
+    padding: 12px;
     background: rgba(255, 255, 255, 0.9);
     border-radius: 8px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     align-items: center;
 }
 
 .palavra-selecionada {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 700;
     color: #667eea;
     font-family: 'Courier New', monospace;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
-    min-height: 30px;
+    min-height: 20px;
     text-align: center;
+    word-break: break-all;
 }
 
 .botoes-controle {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 8px;
     width: 100%;
 }
 
 .botao-controle {
-    padding: 12px 16px;
-    font-size: 14px;
+    padding: 10px 12px;
+    font-size: 12px;
     font-weight: 600;
     border: none;
     border-radius: 8px;
@@ -315,7 +372,8 @@
     cursor: pointer;
     transition: all 0.3s ease;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
+    min-height: 40px;
 }
 
 .botao-controle:hover {
@@ -378,30 +436,30 @@
 .secao-explicacao {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 12px;
-    padding: 16px;
+    padding: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .titulo-explicacao {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     color: #333;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
 }
 
 .container-explicacao {
-    min-height: 80px;
+    min-height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .texto-explicacao {
-    font-size: 14px;
+    font-size: 13px;
     color: #666;
-    line-height: 1.6;
+    line-height: 1.5;
     text-align: center;
 }
 
@@ -410,10 +468,10 @@
 }
 
 .palavra-destaque {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 700;
     color: #667eea;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     text-transform: capitalize;
 }
 
@@ -576,15 +634,15 @@
 
 @media (min-width: 768px) {
     .conteudo-jogo {
-        grid-template-columns: 250px 1fr;
-        gap: 20px;
-        padding: 0 20px;
+        grid-template-columns: 200px 1fr;
+        gap: 12px;
+        padding: 0 12px;
     }
 
     .painel-palavras {
         position: sticky;
-        top: 20px;
-        max-height: 500px;
+        top: 12px;
+        max-height: 400px;
         overflow-y: auto;
     }
 
@@ -601,10 +659,6 @@
         grid-row: 2;
     }
 
-    .container-grade {
-        min-height: 400px;
-    }
-
     .lista-palavras {
         flex-direction: column;
     }
@@ -612,30 +666,44 @@
     .item-palavra {
         width: 100%;
         text-align: left;
+        font-size: 13px;
+        padding: 8px;
     }
 
     .modal-conclusao {
         max-width: 500px;
     }
     
-    .botoes-controle {
-        grid-template-columns: 1fr 1.2fr;
-    }
-    
     .controles-selecao {
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+        padding: 12px;
     }
     
     .palavra-selecionada {
         flex: 1;
-        margin-right: 16px;
+        margin-right: 12px;
+        font-size: 16px;
     }
     
     .botoes-controle {
         flex: 0 0 auto;
         width: auto;
+        grid-template-columns: auto auto;
+    }
+    
+    .botao-controle {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+    
+    .titulo-tema {
+        font-size: 22px;
+    }
+    
+    .valor-status {
+        font-size: 20px;
     }
 }
 
@@ -645,30 +713,33 @@
 
 @media (min-width: 1024px) {
     .container-jogo {
-        padding: 20px;
+        padding: 12px;
     }
 
     .cabecalho-jogo {
-        margin-bottom: 20px;
+        margin-bottom: 12px;
+        padding: 14px;
     }
 
     .conteudo-jogo {
-        grid-template-columns: 280px 1fr;
-        gap: 24px;
+        grid-template-columns: 220px 1fr;
+        gap: 16px;
         padding: 0;
     }
 
     .titulo-tema {
-        font-size: 32px;
+        font-size: 26px;
     }
 
     .painel-palavras {
         background: rgba(255, 255, 255, 0.98);
-        max-height: 600px;
+        max-height: 500px;
+        padding: 14px;
     }
 
-    .container-grade {
-        min-height: 500px;
+    .item-palavra {
+        font-size: 14px;
+        padding: 8px 10px;
     }
 
     .modal-conclusao {
@@ -676,11 +747,15 @@
     }
     
     .palavra-selecionada {
-        font-size: 20px;
+        font-size: 18px;
     }
     
     .botao-controle {
-        padding: 14px 20px;
-        font-size: 15px;
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+    
+    .valor-status {
+        font-size: 22px;
     }
 }
