@@ -1,5 +1,5 @@
 // Centralizar as chamadas da API
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'https://caca-palavras-backend.onrender.com';
 
 // GET /temas - Buscar todos os temas
 const obterTemas = async () => {

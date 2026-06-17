@@ -259,7 +259,7 @@ class JogoEducativo {
     async buscarPalavras() {
         try {
             const resposta = await fetch(
-                `http://localhost:3000/palavras/tema/${this.temaId}`
+                `https://caca-palavras-backend.onrender.com/palavras/tema/${this.temaId}`
             );
             
             if (!resposta.ok) {
@@ -738,7 +738,7 @@ class JogoEducativo {
     // Buscar melhor tempo (recorde)
     async buscarMelhorTempo() {
         try {
-            const resposta = await fetch('http://localhost:3000/recordes');
+            const resposta = await fetch('https://caca-palavras-backend.onrender.com/recordes');
             
             if (!resposta.ok) {
                 throw new Error(`Erro: ${resposta.status}`);
@@ -767,7 +767,7 @@ class JogoEducativo {
     // Salvar recorde se necessário
     async salvarRecorde() {
         try {
-            const resposta = await fetch('http://localhost:3000/recordes', {
+            const resposta = await fetch(' https://caca-palavras-backend.onrender.com/recordes', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

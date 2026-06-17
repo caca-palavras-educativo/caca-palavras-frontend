@@ -83,7 +83,7 @@ function iniciarJogo() {
 // Função para buscar temas (importada de api.js)
 async function obterTemas() {
     try {
-        const resposta = await fetch('http://localhost:3000/temas');
+        const resposta = await fetch(' https://caca-palavras-backend.onrender.com/temas');
         
         if (!resposta.ok) {
             throw new Error(`Erro: ${resposta.status}`);
