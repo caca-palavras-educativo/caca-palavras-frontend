@@ -8,23 +8,24 @@
     flex-direction: column;
     min-height: 100vh;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 8px;
+    padding: 4px;
     max-width: 100%;
     overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 /* Cabeçalho do Jogo */
 .cabecalho-jogo {
     background: rgba(255, 255, 255, 0.95);
-    padding: 12px;
+    padding: 8px 10px;
     border-radius: 0 0 12px 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 4px;
 }
 
 .info-tema {
@@ -32,25 +33,25 @@
 }
 
 .titulo-tema {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 700;
     color: #333;
     margin-bottom: 2px;
 }
 
 .dificuldade {
-    font-size: 10px;
+    font-size: 8px;
     color: #999;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .botao-voltar {
-    padding: 6px 12px;
+    padding: 4px 8px;
     background: #f0f0f0;
     border: none;
     border-radius: 6px;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 600;
     color: #666;
     cursor: pointer;
@@ -72,11 +73,11 @@
 .barra-status {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    padding: 12px;
+    gap: 4px;
+    padding: 6px 4px;
     background: rgba(255, 255, 255, 0.95);
     border-radius: 12px;
-    margin: 0 8px 8px;
+    margin: 0 4px 4px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
@@ -88,7 +89,7 @@
 }
 
 .label-status {
-    font-size: 9px;
+    font-size: 7px;
     color: #999;
     text-transform: uppercase;
     letter-spacing: 0.3px;
@@ -97,7 +98,7 @@
 }
 
 .valor-status {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 700;
     color: #667eea;
     font-family: 'Courier New', monospace;
@@ -108,8 +109,8 @@
     flex: 1;
     display: grid;
     grid-template-columns: 1fr;
-    gap: 8px;
-    padding: 0 8px;
+    gap: 4px;
+    padding: 0 4px;
     overflow-y: auto;
     min-height: 0;
 }
@@ -118,17 +119,17 @@
 .painel-palavras {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 12px;
-    padding: 12px;
+    padding: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-height: 120px;
+    max-height: 80px;
     overflow-y: auto;
 }
 
 .titulo-painel {
-    font-size: 13px;
+    font-size: 10px;
     font-weight: 600;
     color: #333;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     text-transform: uppercase;
     letter-spacing: 0.3px;
 }
@@ -137,15 +138,15 @@
     list-style: none;
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 4px;
 }
 
 .item-palavra {
     background: #f0f0f0;
     border: 2px solid transparent;
     border-radius: 8px;
-    padding: 6px 10px;
-    font-size: 12px;
+    padding: 4px 8px;
+    font-size: 10px;
     font-weight: 500;
     color: #333;
     cursor: pointer;
@@ -183,7 +184,7 @@
 .secao-grade {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 12px;
-    padding: 12px;
+    padding: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
@@ -195,7 +196,9 @@
     border-radius: 8px;
     overflow: visible;
     user-select: none;
-    padding: 8px;
+    padding: 4px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .placeholder-grade {
@@ -213,8 +216,9 @@
     border-collapse: collapse;
     table-layout: fixed;
     max-width: 100%;
-    width: auto;
+    width: calc(100% - 8px);
     height: auto;
+    box-sizing: border-box;
 }
 
 .celula-grade {
@@ -231,6 +235,8 @@
     -moz-user-select: none;
     -ms-user-select: none;
     aspect-ratio: 1 / 1;
+    font-size: clamp(11px, 2.5vw, 18px);
+    padding: 2px;
 }
 
 .celula-grade:hover {
