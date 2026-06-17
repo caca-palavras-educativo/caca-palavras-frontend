@@ -17,7 +17,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 12px;
+    padding: clamp(10px, 2vw, 20px);
     margin: 0;
     overflow-x: hidden;
 }
@@ -25,7 +25,7 @@ body {
 /* Container Principal */
 .container-principal {
     width: 100%;
-    max-width: 480px;
+    max-width: clamp(300px, 90vw, 500px);
     animation: fadeIn 0.6s ease-in;
 }
 
@@ -77,10 +77,10 @@ body {
 
 /* Descrição */
 .descricao {
-    font-size: 16px;
+    font-size: clamp(14px, 2.5vw, 16px);
     color: #666;
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: clamp(24px, 5vw, 32px);
     line-height: 1.8;
 }
 
@@ -88,17 +88,17 @@ body {
 .formulario {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: clamp(16px, 3vw, 22px);
 }
 
 .grupo-form {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: clamp(6px, 1.2vw, 10px);
 }
 
 .label {
-    font-size: 14px;
+    font-size: clamp(12px, 2vw, 14px);
     font-weight: 600;
     color: #333;
     text-transform: uppercase;
@@ -106,8 +106,8 @@ body {
 }
 
 .select {
-    padding: 14px 12px;
-    font-size: 16px;
+    padding: clamp(11px, 2.5vw, 16px) clamp(10px, 2vw, 14px);
+    font-size: clamp(14px, 2.2vw, 16px);
     border: 2px solid #e0e0e0;
     border-radius: 8px;
     background: white;
@@ -119,7 +119,8 @@ body {
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 20px;
-    padding-right: 40px;
+    padding-right: clamp(30px, 5vw, 40px);
+    min-height: clamp(40px, 8vw, 48px);
 }
 
 .select:hover {
@@ -138,8 +139,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
-    padding: 20px;
+    gap: clamp(12px, 2.5vw, 18px);
+    padding: clamp(16px, 3vw, 22px);
     text-align: center;
 }
 
@@ -147,8 +148,8 @@ body {
     border: 4px solid #f0f0f0;
     border-top: 4px solid #667eea;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: clamp(32px, 6vw, 44px);
+    height: clamp(32px, 6vw, 44px);
     animation: spin 1s linear infinite;
 }
 
@@ -158,14 +159,14 @@ body {
 }
 
 .container-carregamento p {
-    font-size: 14px;
+    font-size: clamp(12px, 2vw, 14px);
     color: #999;
 }
 
 /* Botões */
 .botao {
-    padding: 16px 20px;
-    font-size: 16px;
+    padding: clamp(12px, 2.5vw, 18px) clamp(16px, 3vw, 24px);
+    font-size: clamp(13px, 2vw, 16px);
     font-weight: 600;
     border: none;
     border-radius: 8px;
@@ -173,7 +174,7 @@ body {
     transition: all 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    min-height: 50px;
+    min-height: clamp(42px, 8.5vw, 50px);
 }
 
 .botao-principal {
@@ -201,26 +202,30 @@ body {
    =================================== */
 
 @media (min-width: 768px) {
+    .container-principal {
+        max-width: clamp(500px, 85vw, 620px);
+    }
+
     .titulo {
-        font-size: 40px;
+        font-size: clamp(32px, 6vw, 48px);
     }
 
     .descricao {
-        font-size: 18px;
+        font-size: clamp(15px, 2.5vw, 18px);
     }
 
     .cartao {
-        padding: 40px 30px;
+        padding: clamp(28px, 4.5vw, 40px) clamp(24px, 4vw, 32px);
     }
 
     .select,
     .botao {
-        font-size: 18px;
-        padding: 16px 24px;
+        font-size: clamp(15px, 2.2vw, 18px);
+        padding: clamp(13px, 2.5vw, 18px) clamp(18px, 3vw, 26px);
     }
 
     .label {
-        font-size: 15px;
+        font-size: clamp(13px, 2vw, 15px);
     }
 }
 
@@ -230,15 +235,20 @@ body {
 
 @media (min-width: 1024px) {
     .container-principal {
-        max-width: 600px;
+        max-width: clamp(580px, 80vw, 640px);
     }
 
     .titulo {
-        font-size: 48px;
+        font-size: clamp(40px, 6.5vw, 52px);
     }
 
     .cartao {
-        padding: 50px 40px;
+        padding: clamp(36px, 5vw, 50px) clamp(32px, 5vw, 44px);
         box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    .select,
+    .botao {
+        font-size: clamp(15px, 2.2vw, 18px);
     }
 }
