@@ -89,7 +89,8 @@
     text-align: center;
 }
 
-.label-status {clamp(6px, 1.3vw, 9px);
+.label-status {
+    font-size: clamp(6px, 1.3vw, 9px);
     color: #999;
     text-transform: uppercase;
     letter-spacing: 0.3px;
@@ -218,11 +219,11 @@
 .grade-tabela {
     border-collapse: collapse;
     width: 100%;
-    max-width: 100%;
+    table-layout: fixed;
+
 }
 
 .celula-grade {
-    border: 1px solid #ddd;
     text-align: center;
     vertical-align: middle;
     font-weight: 700;
