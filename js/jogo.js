@@ -16,8 +16,7 @@ class Grade {
         );
     }
 
-    // Resetar grade mantendo o tamanho
-    resetar() {
+    resetar() {// Resetar grade mantendo o tamanho
         this.grade = this.inicializarGrade();
         this.palavrasGrade = [];
     }
@@ -25,8 +24,7 @@ class Grade {
     // Inserir palavra em posição específica com direção específica
     // Retorna posições da palavra ou null se não conseguiu inserir
     inserirPalavraEm(palavra, id, row, col, direcao) {
-        // Validar se pode inserir nesta posição
-        if (!this.podeInserir(palavra, row, col, direcao)) {
+        if (!this.podeInserir(palavra, row, col, direcao)) {// Validar se pode inserir nesta posição
             return null;
         }
 
@@ -93,8 +91,7 @@ class Grade {
             posicoes.push({ r, c });
         }
 
-        // Registrar palavra inserida
-        this.palavrasGrade.push({
+        this.palavrasGrade.push({// Registrar palavra inserida
             id,
             termo: palavra,
             posicoes,
@@ -111,8 +108,7 @@ class Grade {
         for (let i = 0; i < this.tamanho; i++) {
             for (let j = 0; j < this.tamanho; j++) {
                 if (this.grade[i][j].letra === '') {
-                    // Usar letra aleatória sem repetição excessiva
-                    this.grade[i][j].letra = letras[Math.floor(Math.random() * letras.length)];
+                    this.grade[i][j].letra = letras[Math.floor(Math.random() * letras.length)];// Usar letra aleatória sem repetição excessiva
                 }
             }
         }
@@ -127,8 +123,7 @@ class Grade {
         // Verificar todas as direções possíveis
         for (let row = 0; row < this.tamanho; row++) {
             for (let col = 0; col < this.tamanho; col++) {
-                // Tentar 4 direções: horizontal, vertical, diagonal desc, diagonal subida
-                for (let direcao = 0; direcao < 4; direcao++) {
+                for (let direcao = 0; direcao < 4; direcao++) {// Tentar 4 direções: horizontal, vertical, diagonal desc, diagonal subida
                     if (this.encontrouPalavraEm(palavraUpper, row, col, direcao)) {
                         return true;
                     }
@@ -138,7 +133,6 @@ class Grade {
                 }
             }
         }
-
         return false;
     }
 
@@ -181,38 +175,24 @@ class JogoEducativo {
         this.melhorTempoAtual = null;
         this.direcaoFixada = null; // Armazena a direção após 2ª seleção
         this.arrastando = false;
+        this.celulaInicial = null; // Armazena a célula inicial da seleção
         this.inicializar();
     }
 
     // Inicializar o jogo
     async inicializar() {
         try {
-            // Ler parâmetros da URL
+
             this.lerParametrosURL();
-
-            // Exibir informações na tela
             this.exibirInformacoes();
-
-            // Buscar palavras da API
             await this.buscarPalavras();
-
-            // Criar grade
             this.criarGrade();
-
-            // Exibir palavras na lista
             this.exibirListaPalavras();
-
-            // Renderizar grade visual
             this.renderizarGrade();
-
-            // Iniciar cronômetro
             this.iniciarCronometro();
-
-            // Buscar melhor tempo
             await this.buscarMelhorTempo();
-
-            // Configurar event listeners
             this.configurarEventos();
+
         } catch (erro) {
             console.error('Erro ao inicializar jogo:', erro);
             alert('Erro ao carregar o jogo. Redirecionando...');
@@ -220,7 +200,6 @@ class JogoEducativo {
         }
     }
 
-    // Ler parâmetros da URL
     lerParametrosURL() {
         const params = new URLSearchParams(window.location.search);
         this.temaId = params.get('tema_id');
@@ -238,7 +217,6 @@ class JogoEducativo {
         // Título do tema
         document.getElementById('tituloTema').textContent = this.temaNome;
 
-        // Dificuldade
         const dificuldadeTexto = {
             'facil': 'Fácil',
             'medio': 'Médio',
@@ -273,7 +251,6 @@ class JogoEducativo {
 
     // Criar grade do caça-palavras com garantia de inserção 100%
     criarGrade() {
-        // Tamanhos iniciais por dificuldade
         const tamanhosPorDificuldade = {
             'facil': 10,
             'medio': 12,
@@ -286,18 +263,14 @@ class JogoEducativo {
         const maxTentativasGrade = 5; // Máximo de tentativas antes de aumentar tamanho
 
         // Tentar gerar até conseguir inserir todas as palavras
-        // CORRIGIDO (Requisito 4): Usar maxTentativasGrade no controle do laço
         while (!sucesso && tentativasGrade < 10) {
-            // Se atingimos maxTentativasGrade tentativas, aumentar o tamanho
-            if (tentativasGrade > 0 && tentativasGrade % maxTentativasGrade === 0) {
+            if (tentativasGrade > 0 && tentativasGrade % maxTentativasGrade === 0) {// Se atingimos maxTentativasGrade tentativas, aumentar o tamanho
                 tamanho += 2;
             }
             tentativasGrade++;
             this.grade = new Grade(tamanho);
 
-            // Embaralhar lista de palavras para variação
             const palavrasEmbaralhadas = this.embaralharPalavras();
-
             let todasInseridas = true;
 
             // Tentar inserir cada palavra
@@ -392,10 +365,8 @@ class JogoEducativo {
         return copia;
     }
 
-    // Encontrar posição aleatória válida para inserir palavra
     encontrarPosicaoAleatoriaParaPalavra(palavra, direcao) {
-        // Tentar até 50 posições aleatórias
-        for (let tentativa = 0; tentativa < 50; tentativa++) {
+        for (let tentativa = 0; tentativa < 50; tentativa++) {// Tentar até 50 posições aleatórias
             const row = Math.floor(Math.random() * this.grade.tamanho);
             const col = Math.floor(Math.random() * this.grade.tamanho);
 
@@ -418,7 +389,6 @@ class JogoEducativo {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -443,114 +413,43 @@ class JogoEducativo {
                 // Mouse
                 celula.addEventListener('pointerdown', (e) => {
                     this.limparSelecao();
-
                     this.arrastando = true;
-
-                    this.selecionarCelula(e, i, j);
+                    this.celulaInicial = {
+                        row: i,
+                        col: j
+                    };
+                    this.selecionadas = [
+                        {
+                            row: i,
+                            col: j
+                        }
+                    ];
+                    this.atualizarDisplaySelecao();
                 });
 
-                // celula.addEventListener('pointerenter', (e) => {
-                //     if (!this.arrastando) return;
-
-                //     const jaSelecionada = this.selecionadas.some(
-                //         s => s.row === i && s.col === j
-                //     );
-
-                //     if (!jaSelecionada) {
-                //         this.selecionarCelula(e, i, j);
-                //     }
-                // });
                 linha.appendChild(celula);
             }
-
             tabela.appendChild(linha);
         }
-
         container.appendChild(tabela);
-
         tabela.addEventListener('pointermove', (e) => {
+            if (!this.arrastando) return;
 
-    if (!this.arrastando) return;
+            const elemento = document.elementFromPoint(
+                e.clientX,
+                e.clientY
+            );
 
-    const elemento = document.elementFromPoint(
-        e.clientX,
-        e.clientY
-    );
+            if (
+                elemento &&
+                elemento.classList.contains('celula-grade')
+            ) {
+                const row = parseInt(elemento.dataset.row);
+                const col = parseInt(elemento.dataset.col);
 
-    if (
-        elemento &&
-        elemento.classList.contains('celula-grade')
-    ) {
-
-        const row = parseInt(elemento.dataset.row);
-        const col = parseInt(elemento.dataset.col);
-
-        const jaSelecionada = this.selecionadas.some(
-            s => s.row === row && s.col === col
-        );
-
-        if (!jaSelecionada) {
-            this.selecionarCelula(e, row, col);
-        }
-    }
-});
-
-    }
-
-    // Selecionar célula individual
-    selecionarCelula(e, row, col) {
-        e.preventDefault();
-
-        // Se é a primeira seleção
-        if (this.selecionadas.length === 0) {
-            this.selecionadas.push({ row, col });
-            this.direcaoFixada = null;
-            this.atualizarDisplaySelecao();
-            return;
-        }
-
-        // Verificar se é uma célula já selecionada (desfazer)
-        const jaExisteSelecionada = this.selecionadas.findIndex(s => s.row === row && s.col === col);
-        if (jaExisteSelecionada !== -1) {
-            // Remover e reconstruir até esse ponto (desfazer últimos cliques)
-            this.selecionadas = this.selecionadas.slice(0, jaExisteSelecionada);
-            // CORRIGIDO (Requisito 2-3): Se removemos até ficar com 1 ou 0 elementos, resetar direção
-            if (this.selecionadas.length <= 1) {
-                this.direcaoFixada = null;
+                this.atualizarSelecaoPorArrasto(row, col);
             }
-            this.atualizarDisplaySelecao();
-            return;
-        }
-
-        // Verificar se é adjacente à última seleção
-        const ultima = this.selecionadas[this.selecionadas.length - 1];
-        const distancia = Math.max(Math.abs(row - ultima.row), Math.abs(col - ultima.col));
-
-        // Permitir apenas células adjacentes (linha, coluna ou diagonal)
-        if (distancia !== 1) {
-            return;
-        }
-
-        // CORRIGIDO (Requisito 2): Calcular direção do movimento e validar linha reta
-        const dr = row === ultima.row ? 0 : (row > ultima.row ? 1 : -1);
-        const dc = col === ultima.col ? 0 : (col > ultima.col ? 1 : -1);
-
-        // Validar que o movimento continua em linha reta
-        // Se ainda não fixou direção (2ª seleção), fixar agora
-        if (this.direcaoFixada === null) {
-            // CORRIGIDO (Requisito 2): Fixar direção na segunda seleção
-            this.direcaoFixada = { dr, dc };
-        } else {
-            // Verificar se a direção está mantendo a mesma (impedir zig-zag)
-            if (this.direcaoFixada.dr !== dr || this.direcaoFixada.dc !== dc) {
-                // Movimento em direção diferente - não permitir zig-zag
-                return;
-            }
-        }
-
-        // Adicionar à seleção
-        this.selecionadas.push({ row, col });
-        this.atualizarDisplaySelecao();
+        });
     }
 
     // Atualizar display da seleção
@@ -576,8 +475,62 @@ class JogoEducativo {
         document.getElementById('palavraSelecionada').textContent = texto || '---';
     }
 
-    // Confirmar palavra (validar com exatidão e pontuar)
-    confirmarPalavra() {
+    atualizarSelecaoPorArrasto(rowFinal, colFinal) {
+        if (!this.celulaInicial) return;
+
+        const rowInicial = this.celulaInicial.row;
+        const colInicial = this.celulaInicial.col;
+
+        let dr = rowFinal - rowInicial;
+        let dc = colFinal - colInicial;
+
+        if (dr === 0 && dc === 0) return;
+
+        let passoRow = 0;
+        let passoCol = 0;
+
+        if (Math.abs(dr) > Math.abs(dc) * 1.5) {
+            passoRow = dr > 0 ? 1 : -1;
+            passoCol = 0;
+        }
+        else if (Math.abs(dc) > Math.abs(dr) * 1.5) {
+            passoRow = 0;
+            passoCol = dc > 0 ? 1 : -1;
+        }
+        else {
+            passoRow = dr > 0 ? 1 : -1;
+            passoCol = dc > 0 ? 1 : -1;
+        }
+
+        const tamanho = Math.max(
+            Math.abs(dr),
+            Math.abs(dc)
+        );
+
+        this.selecionadas = [];
+
+        for (let i = 0; i <= tamanho; i++) {
+
+            const row = rowInicial + passoRow * i;
+            const col = colInicial + passoCol * i;
+
+            if (
+                row >= 0 &&
+                row < this.grade.tamanho &&
+                col >= 0 &&
+                col < this.grade.tamanho
+            ) {
+                this.selecionadas.push({
+                    row,
+                    col
+                });
+            }
+        }
+
+        this.atualizarDisplaySelecao();
+    }
+
+    confirmarPalavra() { //Validar palavra e pontuar
         if (this.selecionadas.length === 0) {
             this.exibirMensagem('Selecione uma palavra primeiro!', 'erro');
             return;
@@ -630,33 +583,29 @@ class JogoEducativo {
     // Limpar seleção
     limparSelecao() {
         this.selecionadas = [];
-        // CORRIGIDO (Requisito 2-3): Resetar direção ao limpar seleção
         this.direcaoFixada = null;
+        this.celulaInicial = null;
         this.atualizarDisplaySelecao();
         document.getElementById('palavraSelecionada').textContent = '---';
-        // Remover mensagens
+
         const msg = document.querySelector('.mensagem-validacao');
         if (msg) msg.remove();
     }
 
     // Exibir mensagem de validação
     exibirMensagem(texto, tipo) {
-        // Remover mensagem anterior se existir
         const msgAnterior = document.querySelector('.mensagem-validacao');
         if (msgAnterior) msgAnterior.remove();
 
-        // Criar nova mensagem
         const msg = document.createElement('div');
         msg.className = `mensagem-validacao ${tipo}`;
         msg.textContent = texto;
 
-        // Inserir após os controles
         const controles = document.querySelector('.controles-selecao');
         if (controles) {
             controles.parentNode.insertBefore(msg, controles.nextSibling);
         }
 
-        // Remover após 3 segundos
         setTimeout(() => {
             if (msg && msg.parentNode) {
                 msg.remove();
@@ -664,7 +613,6 @@ class JogoEducativo {
         }, 3000);
     }
 
-    // Palavra foi encontrada
     palavraEncontrada(indice) {
         this.palavrasEncontradas.add(indice);
 
@@ -678,10 +626,7 @@ class JogoEducativo {
             itemLista.classList.add('encontrado');
         }
 
-        // Destacar palavras na grade
         this.destacarPalavrasNaGrade();
-
-        // Exibir mensagem de sucesso
         this.exibirMensagem('✓ Palavra encontrada!', 'sucesso');
 
         // Verificar se todas foram encontradas
@@ -696,10 +641,6 @@ class JogoEducativo {
             celula.classList.remove('encontrada');
         });
 
-        // CORRIGIDO (Requisito 1): Usar ID da palavra em vez de índice para destacar
-        // Isso garante que a palavra correta seja destacada independentemente da ordem
-        // de inserção na grade (palavrasGrade é preenchido na ordem de inserção,
-        // mas o índice em palavrasEncontradas corresponde à posição em this.palavras)
         this.palavrasEncontradas.forEach(indice => {
             // Procurar a palavra em palavrasGrade usando o ID (que é o índice original)
             const palavra = this.grade.palavrasGrade.find(p => p.id === indice);
@@ -754,7 +695,6 @@ class JogoEducativo {
         elemento.classList.add('ativo');
     }
 
-    // Iniciar cronômetro
     iniciarCronometro() {
         this.tempo = 0;
         this.atualizarCronometro();
@@ -765,7 +705,6 @@ class JogoEducativo {
         }, 1000);
     }
 
-    // Atualizar display do cronômetro
     atualizarCronometro() {
         const minutos = Math.floor(this.tempo / 60);
         const segundos = this.tempo % 60;
@@ -773,8 +712,7 @@ class JogoEducativo {
         document.getElementById('cronometro').textContent = tempo;
     }
 
-    // Buscar melhor tempo (recorde)
-    async buscarMelhorTempo() {
+    async buscarMelhorTempo() { //Buscar recorde
         try {
             const resposta = await fetch('https://caca-palavras-backend.onrender.com/recordes');
 
@@ -841,6 +779,7 @@ class JogoEducativo {
             if (!this.arrastando) return;
 
             this.arrastando = false;
+            this.celulaInicial = null;
 
             if (this.selecionadas.length > 1) {
                 this.confirmarPalavra();
