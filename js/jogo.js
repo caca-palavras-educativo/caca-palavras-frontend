@@ -1,7 +1,4 @@
-// ========================================
-// CLASSE PARA GERENCIAR A GRADE DO JOGO
-// ========================================
-
+//Classe para gerenciar grade do jogo
 class Grade {
     constructor(tamanho) {
         this.tamanho = tamanho;
@@ -168,10 +165,7 @@ class Grade {
     }
 }
 
-// ========================================
-// CLASSE PARA GERENCIAR O JOGO
-// ========================================
-
+//Classe para gerenciar o jogo
 class JogoEducativo {
     constructor() {
         this.temaId = null;
@@ -185,9 +179,7 @@ class JogoEducativo {
         this.selecionadas = [];
         this.palavrasEncontradas = new Set();
         this.melhorTempoAtual = null;
-        // CORRIGIDO (Requisito 2): Adicionar controle de direção para validar linha reta
         this.direcaoFixada = null; // Armazena a direção após 2ª seleção
-
         this.inicializar();
     }
 
@@ -448,21 +440,24 @@ class JogoEducativo {
                 celula.dataset.col = j;
 
                 // Mouse
-                celula.addEventListener('mousedown', (e) => {
+                celula.addEventListener('pointerdown', (e) => {
+                    this.limparSelecao();
+
                     this.arrastando = true;
+
                     this.selecionarCelula(e, i, j);
                 });
 
-                celula.addEventListener('mouseenter', (e) => {
-                    if (this.arrastando) {
+                celula.addEventListener('pointerenter', (e) => {
+                    if (!this.arrastando) return;
+
+                    const jaSelecionada = this.selecionadas.some(
+                        s => s.row === i && s.col === j
+                    );
+
+                    if (!jaSelecionada) {
                         this.selecionarCelula(e, i, j);
                     }
-                });
-
-                // Toque (celular)
-                celula.addEventListener('touchstart', (e) => {
-                    this.arrastando = true;
-                    this.selecionarCelula(e, i, j);
                 });
                 linha.appendChild(celula);
             }
@@ -471,32 +466,7 @@ class JogoEducativo {
         }
 
         container.appendChild(tabela);
-        tabela.addEventListener('touchmove', (e) => {
-            if (!this.arrastando) return;
 
-            const toque = e.touches[0];
-
-            const elemento = document.elementFromPoint(
-                toque.clientX,
-                toque.clientY
-            );
-
-            if (
-                elemento &&
-                elemento.classList.contains('celula-grade')
-            ) {
-                const row = parseInt(elemento.dataset.row);
-                const col = parseInt(elemento.dataset.col);
-
-                const jaSelecionada = this.selecionadas.some(
-                    s => s.row === row && s.col === col
-                );
-
-                if (!jaSelecionada) {
-                    this.selecionarCelula(e, row, col);
-                }
-            }
-        });
     }
 
     // Selecionar célula individual
@@ -506,8 +476,7 @@ class JogoEducativo {
         // Se é a primeira seleção
         if (this.selecionadas.length === 0) {
             this.selecionadas.push({ row, col });
-            this.direcaoFixada = null; // Resetar direção
-            this.arrastando = false;
+            this.direcaoFixada = null;
             this.atualizarDisplaySelecao();
             return;
         }
@@ -839,12 +808,15 @@ class JogoEducativo {
 
     // Configurar event listeners
     configurarEventos() {
-        document.addEventListener('mouseup', () => {
-            this.arrastando = false;
-        });
+        document.addEventListener('pointerup', () => {
 
-        document.addEventListener('touchend', () => {
+            if (!this.arrastando) return;
+
             this.arrastando = false;
+
+            if (this.selecionadas.length > 1) {
+                this.confirmarPalavra();
+            }
         });
 
         // Botão voltar
@@ -854,12 +826,6 @@ class JogoEducativo {
                 window.location.href = '../index.html';
             }
         });
-
-        // Botão confirmar palavra
-        document.getElementById('botaoConfirmar').addEventListener('click', () => {
-            this.confirmarPalavra();
-        });
-
         // Botão limpar seleção
         document.getElementById('botaoLimpar').addEventListener('click', () => {
             this.limparSelecao();

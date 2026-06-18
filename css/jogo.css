@@ -242,6 +242,8 @@
     max-width: clamp(18px, 5vw, 32px); 
     font-size: clamp(10px, 2vw, 14px);
     padding: 2px;
+    touch-action: none;
+    user-select: none;
 }
 
 .celula-grade:hover {
