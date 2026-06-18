@@ -1,6 +1,4 @@
-/* ===================================
-   CSS ESPECÍFICO - TELA DO JOGO
-   =================================== */
+/* CSS ESPECÍFICO - TELA DO JOGO */
 
 /* Container do Jogo */
 .container-jogo {
@@ -267,9 +265,7 @@
     font-weight: 700;
 }
 
-/* ===================================
-   CONTROLES DE SELEÇÃO
-   =================================== */
+/* CONTROLES DE SELEÇÃO */
 
 .controles-selecao {
     margin-top: clamp(6px, 1.5vw, 12px);
@@ -650,9 +646,7 @@
     }
 }
 
-/* ===================================
-   RESPONSIVE - DESKTOP (1024px+)
-   =================================== */
+/* RESPONSIVE - DESKTOP (1024px+)*/
 
 @media (min-width: 1024px) {
     .container-jogo {

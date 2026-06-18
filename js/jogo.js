@@ -793,10 +793,6 @@ class JogoEducativo {
                 window.location.href = '../index.html';
             }
         });
-        // Botão limpar seleção
-        document.getElementById('botaoLimpar').addEventListener('click', () => {
-            this.limparSelecao();
-        });
     }
 
     // Parar cronômetro
