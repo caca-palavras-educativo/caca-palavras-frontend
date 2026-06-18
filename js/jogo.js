@@ -180,6 +180,7 @@ class JogoEducativo {
         this.palavrasEncontradas = new Set();
         this.melhorTempoAtual = null;
         this.direcaoFixada = null; // Armazena a direção após 2ª seleção
+        this.arrastando = false;
         this.inicializar();
     }
 
@@ -448,17 +449,17 @@ class JogoEducativo {
                     this.selecionarCelula(e, i, j);
                 });
 
-                celula.addEventListener('pointerenter', (e) => {
-                    if (!this.arrastando) return;
+                // celula.addEventListener('pointerenter', (e) => {
+                //     if (!this.arrastando) return;
 
-                    const jaSelecionada = this.selecionadas.some(
-                        s => s.row === i && s.col === j
-                    );
+                //     const jaSelecionada = this.selecionadas.some(
+                //         s => s.row === i && s.col === j
+                //     );
 
-                    if (!jaSelecionada) {
-                        this.selecionarCelula(e, i, j);
-                    }
-                });
+                //     if (!jaSelecionada) {
+                //         this.selecionarCelula(e, i, j);
+                //     }
+                // });
                 linha.appendChild(celula);
             }
 
@@ -466,6 +467,33 @@ class JogoEducativo {
         }
 
         container.appendChild(tabela);
+
+        tabela.addEventListener('pointermove', (e) => {
+
+    if (!this.arrastando) return;
+
+    const elemento = document.elementFromPoint(
+        e.clientX,
+        e.clientY
+    );
+
+    if (
+        elemento &&
+        elemento.classList.contains('celula-grade')
+    ) {
+
+        const row = parseInt(elemento.dataset.row);
+        const col = parseInt(elemento.dataset.col);
+
+        const jaSelecionada = this.selecionadas.some(
+            s => s.row === row && s.col === col
+        );
+
+        if (!jaSelecionada) {
+            this.selecionarCelula(e, row, col);
+        }
+    }
+});
 
     }
 
