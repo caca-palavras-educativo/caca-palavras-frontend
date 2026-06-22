@@ -11,10 +11,19 @@
     box-sizing: border-box;
 }
 
+/*padronização largura de todos os retângulos*/
+.cabecalho-jogo,
+.barra-status,
+.painel-palavras,
+.secao-grade,
+.secao-explicacao {
+    width: 100%;
+    box-sizing: border-box;
+}
 .cabecalho-jogo {
     background: rgba(255, 255, 255, 0.95);
     padding: 20px 12px;
-    border-radius: 0 0 12px 12px;
+    border-radius: 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -67,15 +76,15 @@
 }
 
 .barra-status {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 15px 8px;
-    background: rgba(255, 255, 255, 0.95);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: clamp(4px, 1vw, 8px);
+    background: rgba(255,255,255,.95);
     border-radius: 12px;
-    margin: 0 clamp(2px, 0.5vw, 6px) clamp(2px, 0.5vw, 6px)px;
-    margin: 0 4px 4px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 6px;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
 }
 
 .status-item {
@@ -95,7 +104,7 @@
 }
 
 .valor-status {
-    font-size: clamp(12px, 2.5vw, 16px)
+    font-size: clamp(12px, 2.5vw, 16px);
     font-size: 14px; /*tamanho dos números*/
     font-weight: 700;
     color: #667eea;
@@ -107,18 +116,20 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: clamp(3px, 0.8vw, 6px);
-    padding: 6px 12px;
+    padding: 0;
     overflow-y: auto;
     min-height: 0;
 }
 
 .painel-palavras {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255,255,255,.95);
     border-radius: 12px;
-    padding: clamp(px, 1.5vw, 10px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-height: clamp(60px, 15vh, 100px);
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    max-height: 170px;
     overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
 }
 
 .lista-palavras {
@@ -183,9 +194,9 @@
     overflow: hidden;
     user-select: none;
     padding: 4px;
-    width: 100%;
     box-sizing: border-box;
-    max-width: clamp(280px, 90vw - 20px, 550px);
+    width: 100%;
+    max-width: 100%;
     margin: 0 auto;
 }
 
@@ -386,9 +397,9 @@
     color: #667eea;
     margin-bottom: clamp(4px, 1vw, 6px);
     text-transform: capitalize;
+    text-align: center;
 }
 
-/* Modal */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -672,4 +683,22 @@
     .valor-status {
         font-size: 22px;
     }
+}
+
+@media (max-width: 767px) {
+
+    .container-jogo {
+        padding: 6px;
+    }
+
+    .cabecalho-jogo,
+    .barra-status,
+    .painel-palavras,
+    .secao-grade,
+    .secao-explicacao {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
 }
