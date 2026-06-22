@@ -11,7 +11,6 @@ class Modal {
         this.configurarEventos();
     }
     
-    // Configurar event listeners
     configurarEventos() {
         this.botaoFecharModal.addEventListener('click', () => this.fechar());
         this.modalOverlay.addEventListener('click', (e) => {
@@ -24,24 +23,20 @@ class Modal {
         this.botaoMenuPrincipal.addEventListener('click', () => this.menuPrincipal());
     }
     
-    // Abrir modal
     abrir(tempoFinal, pontuacao) {
         document.getElementById('tempoFinal').textContent = tempoFinal;
         document.getElementById('pontuacaoFinal').textContent = pontuacao;
         this.modalOverlay.classList.add('ativo');
     }
     
-    // Fechar modal
     fechar() {
         this.modalOverlay.classList.remove('ativo');
     }
     
-    // Novo jogo (recarrega a página)
     novoJogo() {
         location.reload();
     }
     
-    // Voltar ao menu principal
     menuPrincipal() {
         window.location.href = '../index.html';
     }

@@ -60,14 +60,19 @@ class Grade {
         return true;
     }
 
-    // Obter deslocamento (delta) para cada direção
+    // direções das letras
     obterDeltas(direcao) {
         const deltas = {
-            0: { dr: 0, dc: 1 },  // Horizontal (direita)
-            1: { dr: 1, dc: 0 },  // Vertical (baixo)
-            2: { dr: 1, dc: 1 },  // Diagonal descente
-            3: { dr: -1, dc: 1 }  // Diagonal subida
+            0: { dr: 0, dc: 1 },   // →
+            1: { dr: 1, dc: 0 },   // ↓
+            2: { dr: 0, dc: -1 },  // ←
+            3: { dr: -1, dc: 0 },  // ↑
+            4: { dr: 1, dc: 1 },   // ↘
+            5: { dr: -1, dc: 1 },  // ↗
+            6: { dr: 1, dc: -1 },  // ↙
+            7: { dr: -1, dc: -1 }  // ↖
         };
+
         return deltas[direcao] || null;
     }
 
@@ -114,8 +119,6 @@ class Grade {
         }
     }
 
-    // Procurar palavra na grade (para validação)
-    // Retorna true se encontrar a palavra (direta ou inversa)
     procurarPalavra(palavra) {
         const palavraUpper = palavra.toUpperCase();
         const palavraInversa = palavraUpper.split('').reverse().join('');
@@ -123,7 +126,7 @@ class Grade {
         // Verificar todas as direções possíveis
         for (let row = 0; row < this.tamanho; row++) {
             for (let col = 0; col < this.tamanho; col++) {
-                for (let direcao = 0; direcao < 4; direcao++) {// Tentar 4 direções: horizontal, vertical, diagonal desc, diagonal subida
+                for (let direcao = 0; direcao < 8; direcao++) {
                     if (this.encontrouPalavraEm(palavraUpper, row, col, direcao)) {
                         return true;
                     }
@@ -173,13 +176,12 @@ class JogoEducativo {
         this.selecionadas = [];
         this.palavrasEncontradas = new Set();
         this.melhorTempoAtual = null;
-        this.direcaoFixada = null; // Armazena a direção após 2ª seleção
+        this.direcaoFixada = null; 
         this.arrastando = false;
-        this.celulaInicial = null; // Armazena a célula inicial da seleção
+        this.celulaInicial = null; 
         this.inicializar();
     }
 
-    // Inicializar o jogo
     async inicializar() {
         try {
 
@@ -212,9 +214,7 @@ class JogoEducativo {
         }
     }
 
-    // Exibir informações na tela
     exibirInformacoes() {
-        // Título do tema
         document.getElementById('tituloTema').textContent = this.temaNome;
 
         const dificuldadeTexto = {
@@ -273,14 +273,23 @@ class JogoEducativo {
             const palavrasEmbaralhadas = this.embaralharPalavras();
             let todasInseridas = true;
 
-            // Tentar inserir cada palavra
             for (let index = 0; index < palavrasEmbaralhadas.length; index++) {
                 const palavra = palavrasEmbaralhadas[index];
                 const indicePalavraOriginal = this.palavras.indexOf(palavra);
 
                 // Tentar inserir com direções aleatórias
                 let inserida = false;
-                const direcoes = [0, 1, 2, 3];
+                let direcoes;
+
+                if (this.dificuldade === 'facil') {
+                    direcoes = [0, 1];
+                }
+                else if (this.dificuldade === 'medio') {
+                    direcoes = [0, 1, 2, 3];
+                }
+                else {
+                    direcoes = [0, 1, 2, 3, 4, 5, 6, 7];
+                }
                 const direcoesMisturadas = this.embaralharArray(direcoes);
 
                 for (let d = 0; d < direcoesMisturadas.length && !inserida; d++) {
@@ -635,7 +644,6 @@ class JogoEducativo {
         }
     }
 
-    // Destacar palavras encontradas na grade
     destacarPalavrasNaGrade() {
         document.querySelectorAll('.celula-grade').forEach(celula => {
             celula.classList.remove('encontrada');
@@ -655,7 +663,6 @@ class JogoEducativo {
         });
     }
 
-    // Exibir lista de palavras
     exibirListaPalavras() {
         const listaPalavras = document.getElementById('listaPalavras');
         listaPalavras.innerHTML = '';
@@ -676,7 +683,6 @@ class JogoEducativo {
         });
     }
 
-    // Exibir explicação da palavra
     exibirExplicacao(palavra) {
         const containerExplicacao = document.getElementById('containerExplicacao');
         containerExplicacao.innerHTML = `
@@ -740,7 +746,6 @@ class JogoEducativo {
         }
     }
 
-    // Salvar recorde se necessário
     async salvarRecorde() {
         try {
             const resposta = await fetch(' https://caca-palavras-backend.onrender.com/recordes', {
@@ -795,26 +800,19 @@ class JogoEducativo {
         });
     }
 
-    // Parar cronômetro
-    parar() {
+    parar() { //parar cronômetro
         if (this.cronometroId) {
             clearInterval(this.cronometroId);
             this.cronometroId = null;
         }
     }
 
-    // Finalizar jogo
     async finalizarJogo() {
         this.parar();
-
-        // Salvar recorde
         await this.salvarRecorde();
 
         // Exibir modal ou fallback para alert
         const tempo = document.getElementById('cronometro').textContent;
-
-        // CORRIGIDO (Requisito 6): Verificar se objeto modal existe antes de usar
-        // Evita ReferenceError: modal is not defined
         if (typeof modal !== 'undefined' && modal && typeof modal.abrir === 'function') {
             modal.abrir(tempo, this.pontuacao);
         } else {

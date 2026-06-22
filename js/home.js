@@ -1,21 +1,16 @@
 // Lógica da tela inicial
-
 // Elementos do DOM
 const selectTema = document.getElementById('selectTema');
 const selectDificuldade = document.getElementById('selectDificuldade');
 const botaoIniciar = document.getElementById('botaoIniciar');
 const containerCarregamento = document.getElementById('containerCarregamento');
 
-// Carregar temas ao inicializar a página
-document.addEventListener('DOMContentLoaded', carregarTemas);
+document.addEventListener('DOMContentLoaded', carregarTemas); // Carregar temas ao inicializar a página
 
-// Função para carregar temas da API
 async function carregarTemas() {
     try {
         mostrarCarregamento(true);
         const temas = await obterTemas();
-        
-        // Limpar opções anteriores (exceto a padrão)
         selectTema.innerHTML = '<option value="">Selecione um tema...</option>';
         
         // Popular o select com os temas
@@ -34,7 +29,6 @@ async function carregarTemas() {
     }
 }
 
-// Função para mostrar/ocultar indicador de carregamento
 function mostrarCarregamento(ativo) {
     if (ativo) {
         containerCarregamento.style.display = 'block';
@@ -80,7 +74,6 @@ function iniciarJogo() {
     window.location.href = `pages/jogo.html?${params.toString()}`;
 }
 
-// Função para buscar temas (importada de api.js)
 async function obterTemas() {
     try {
         const resposta = await fetch(' https://caca-palavras-backend.onrender.com/temas');

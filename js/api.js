@@ -1,7 +1,6 @@
 // Centralizar as chamadas da API
 const API_BASE_URL = 'https://caca-palavras-backend.onrender.com';
 
-// GET /temas - Buscar todos os temas
 const obterTemas = async () => {
     try {
         const resposta = await fetch(`${API_BASE_URL}/temas`);
