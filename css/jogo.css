@@ -1,6 +1,5 @@
 /* CSS ESPECÍFICO - TELA DO JOGO */
 
-/* Container do Jogo */
 .container-jogo {
     display: flex;
     flex-direction: column;
@@ -12,10 +11,9 @@
     box-sizing: border-box;
 }
 
-/* Cabeçalho do Jogo */
 .cabecalho-jogo {
     background: rgba(255, 255, 255, 0.95);
-    padding: clamp(6px, 1.5vw, 12px) clamp(8px, 2vw, 16px);
+    padding: 20px 12px;
     border-radius: 0 0 12px 12px;
     display: flex;
     justify-content: space-between;
@@ -68,11 +66,11 @@
     transform: scale(0.98);
 }
 
-/* Barra de Status */
 .barra-status {
-    display: grid;
-    grid-clamp(3px, 0.8vw, 8px);
-    padding: clamp(4px, 1vw, 8px) clamp(4px, 1.5vw, 8px);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 15px 8px;
     background: rgba(255, 255, 255, 0.95);
     border-radius: 12px;
     margin: 0 clamp(2px, 0.5vw, 6px) clamp(2px, 0.5vw, 6px)px;
@@ -98,40 +96,29 @@
 
 .valor-status {
     font-size: clamp(12px, 2.5vw, 16px)
-    font-size: 14px;
+    font-size: 14px; /*tamanho dos números*/
     font-weight: 700;
     color: #667eea;
     font-family: 'Courier New', monospace;
 }
 
-/* Conteúdo do Jogo */
 .conteudo-jogo {
     flex: 1;
     display: grid;
     grid-template-columns: 1fr;
     gap: clamp(3px, 0.8vw, 6px);
-    padding: 0 clamp(2px, 1vw, 6px);
+    padding: 6px 12px;
     overflow-y: auto;
     min-height: 0;
 }
 
-/* Painel de Palavras */
 .painel-palavras {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 12px;
-    padding: clamp(px, 1.5vw, 10px);
+    padding: 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-height: clamp(60px, 15vh, 100px);
+    max-height: 80px;
     overflow-y: auto;
-}
-
-.titulo-painel {
-    font-size: clamp(9px, 1.8vw, 12px);
-    font-weight: 600;
-    color: #333;
-    margin-bottom: clamp(3px, 0.8vw, 6px);
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
 }
 
 .lista-palavras {
@@ -180,7 +167,6 @@
     gap: clamp(10px, 2.5vw, 20px);
 }
 
-/* Seção Grade */
 .secao-grade {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 12px;
@@ -372,17 +358,8 @@
 .secao-explicacao {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 12px;
-    padding: clamp(10px, 2vw, 14px);
+    padding: 6px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.titulo-explicacao {
-    font-size: clamp(10px, 1.8vw, 12px);
-    font-weight: 600;
-    color: #333;
-    margin-bottom: clamp(6px, 1.5vw, 8px);
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
 }
 
 .container-explicacao {
